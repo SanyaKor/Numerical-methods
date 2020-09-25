@@ -13,6 +13,7 @@ void ini(int n,int deg){
         p.p_plotter(l.x,l.y);
     }
 
+
     p.init();
 
 }

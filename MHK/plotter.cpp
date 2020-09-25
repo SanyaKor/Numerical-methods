@@ -23,9 +23,6 @@ void plotter::init()
             }
 
             window->clear(Color::White);
-            for(int i=0;i<points.size();i++){
-                window->draw(points[i]);
-            }
             for(int i=0;i<list.size();i++){
                 window->draw(list[i]);
             }
@@ -38,9 +35,12 @@ void plotter::init()
 void plotter::p_plotter(vector<double> x,vector<double> y) {
     CircleShape shape(2.5);
     shape.setFillColor(Color::Red);
+    int x0=-1;
+    int x1=1;
+    double xlen = abs(x1-x0);
 
     for(int i=0;i<x.size();i++){
-        shape.setPosition(sx/4+x[i]*size,sy/2+(anchor+y[i])*size);
+        shape.setPosition(sx/2+x[i],sy/2+(x0 + ((xlen / sx) * y[i])));
         points.push_back(shape);
     }
 }
@@ -48,23 +48,28 @@ void plotter::p_plotter(vector<double> x,vector<double> y) {
 
 
 void plotter::add(vector<double> y) {
-    VertexArray curve(sf::LineStrip,N);
+    VertexArray curve(sf::LineStrip,sx);
     color+=50;
 
-    for(int i =0;i<N;i++){
-        curve[i] = sf::Vector2f(sx/4+(anchor+thickness*i)*size, sy/2+(anchor+y[i])*size);
+    for(int i =0;i<sx;i++){
+        curve[i] = sf::Vector2f(i, sy/2+y[i]);
         Color Ccolor(1*color , 3*color, 2*color);
         curve[i].color = Ccolor;
     }
+
     list.push_back(curve);
 }
 
-void plotter::n_mnogochlen(vector<double> x) {
 
-    vector<double> y(N);
-    for(int i=0;i<N;i++){
+
+void plotter::n_mnogochlen(vector<double> x) {
+    int x0=-50;
+    int x1=50;
+    double xlen = abs(x1-x0);
+    vector<double> y(sx);
+    for(int i=0;i<sx;i++){
         for(int j=0;j<x.size();j++){
-            y[i]+= x[j]*pow((anchor+thickness*i),j);
+            y[i]+= x[j]*pow((x0 + ((xlen / sx) * i)),j);
         }
     }
 
